@@ -9,8 +9,8 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            // "args": ["--all"],
-            "args": ["data/baby2000.html","data/baby2008.html"],
+            "args": ["--all"],
+            // "args": ["data/baby2000.html"],
             "console": "integratedTerminal"
         }
     ]

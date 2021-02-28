@@ -27,7 +27,9 @@ def baby_names_parser(filename):
     return {re.search(r'Popularity\sin\s(\d{4})', ingest).group(1):{"Male": boy, "Female": girl}}
 
 
-def output_names(db, years, genders, order='alpha', start=None, finish=None):
+def output_names(db, years=None, genders=['Male','Female'], order='alpha', start=None, finish=None):
+    if years ==  None:
+        years = db.keys()
         if db: # Output the names by Year / Gender in alphabetical order
             for year in years:
                     print(f'\nYear: {year}')
@@ -39,7 +41,7 @@ def output_names(db, years, genders, order='alpha', start=None, finish=None):
                         if order == 'rank':
                             for name in list(db[year][gender])[start:finish]:
                                 yield name,db[year][gender][name]
-                            # print(f'\t\t{name}: {db[year][gender][name]}')
+
 
 
 def name_trend(name,gender,db):
@@ -76,7 +78,7 @@ def main():
         names.update(year_add)
     # print(names)
 
-    for name, rank in output_names(names, years=names.keys(), genders=["Female","Male"], order= 'rank', start=None, finish=5):
+    for name, rank in output_names(names, order= 'rank', start=None, finish=5):
         print(f'\t\t\t{name}: {rank}')
 
     name_trend("Noah","Male",names)

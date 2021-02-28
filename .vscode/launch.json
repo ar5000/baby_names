@@ -9,9 +9,10 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "args": ["--all"],
+            // "args": ["--all"],
             // "args": ["data/baby2000.html"],
             "console": "integratedTerminal"
+            "justMyCode": false
         }
     ]
 }

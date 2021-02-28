@@ -1,6 +1,10 @@
 import re, sys, os
 
 
+def what_files():
+    file_names = [f'data/{name}' for name in os.listdir(path='data/')]
+    return file_names
+
 def baby_names_parser(filename):
     print(f'File: {filename}')
     try: 
@@ -19,6 +23,28 @@ def baby_names_parser(filename):
         girl[girl_name] = int(rank) # make the girl dict
     
     names[re.search(r'Popularity\sin\s(\d{4})', ingest).group()[-4:]]= {"Male": boy, "Female": girl} #add a 'year' entry to the existing dict instead of returning something
+    
+    return {re.search(r'Popularity\sin\s(\d{4})', ingest).group(1):{"Male": boy, "Female": girl}}
+
+
+def output_names(db,count=10):
+        if db: # Output the names by Year / Gender in alphabetical order
+            for year in db.keys():
+                    print(f'\nYear: {year}')
+                    for gender in db[year]:
+                        print(f'\n\tGender: {gender}')
+                        for name in sorted(db[year][gender], key=str.lower)[:count]: # only displaying the first 10
+                            print(f'\t\t{name}: {db[year][gender][name]}')
+
+
+def name_trend(name,gender,db):
+    print(f'\n\n{name}-') #check the popularity of a specific name over time
+    for year in db.keys():
+        try:
+            print(f'Year: {year} Rank: {db[year][gender][name]}')
+        except:
+            print("Name not found")
+
 
 def main():
     global names
@@ -59,7 +85,7 @@ def main():
     if not args: # No arguments returns a list of files available for parsing then exits
         print(f'Current working directory is: {os.getcwd()}')
         print(f'Specify one or more of the following files:')
-        [print(f'data/{name}') for name in os.listdir(path='data/')]
+        [print(name) for name in what_files()]
         print('Or "--all" to recurse the data/ directory')
         exit()
     
@@ -71,22 +97,28 @@ def main():
             args.append('data/' + item)
         
     for filename in args: # can pass more than one filename
-        baby_names_parser(filename)
+        year_add = baby_names_parser(filename)
+        names.update(year_add)
+    # print(names)
 
-    if names: # Output the names by Year / Gender in alphabetical order
-        for year in names.keys():
-            print(f'\nYear: {year}')
-            for gender in names[year]:
-                print(f'\n\tGender: {gender}')
-                for name in sorted(names[year][gender], key=str.lower)[:50]: # only displaying the first 10
-                    print(f'\t\t{name}: {names[year][gender][name]}')
+    output_names(names,count=50)
 
-    print('\n\nNoah-') #check the popularity of a specific name over time
-    for year in names.keys():
-        try:
-            print(f'Year: {year} Rank: {names[year]["Male"]["Noah"]}')
-        except:
-            print("Name not found")
+    # if names: # Output the names by Year / Gender in alphabetical order
+    #     for year in names.keys():
+    #         print(f'\nYear: {year}')
+    #         for gender in names[year]:
+    #             print(f'\n\tGender: {gender}')
+    #             for name in sorted(names[year][gender], key=str.lower)[:50]: # only displaying the first 10
+    #                 print(f'\t\t{name}: {names[year][gender][name]}')
+
+    name_trend("Noah","Male",names)
+    
+    # print('\n\nNoah-') #check the popularity of a specific name over time
+    # for year in names.keys():
+    #     try:
+    #         print(f'Year: {year} Rank: {names[year]["Male"]["Noah"]}')
+    #     except:
+    #         print("Name not found")
 
 if __name__ == '__main__':
     main()

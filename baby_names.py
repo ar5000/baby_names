@@ -1,9 +1,9 @@
 import re, sys, os
 
-
 def what_files():
     file_names = [f'data/{name}' for name in os.listdir(path='data/')]
     return file_names
+
 
 def baby_names_parser(filename):
     print(f'File: {filename}')
@@ -22,19 +22,24 @@ def baby_names_parser(filename):
         boy[boy_name] = int(rank) # make the boy dict
         girl[girl_name] = int(rank) # make the girl dict
     
-    names[re.search(r'Popularity\sin\s(\d{4})', ingest).group()[-4:]]= {"Male": boy, "Female": girl} #add a 'year' entry to the existing dict instead of returning something
+    # names[re.search(r'Popularity\sin\s(\d{4})', ingest).group()[-4:]]= {"Male": boy, "Female": girl} #add a 'year' entry to the existing dict instead of returning something
     
     return {re.search(r'Popularity\sin\s(\d{4})', ingest).group(1):{"Male": boy, "Female": girl}}
 
 
-def output_names(db,count=10):
+def output_names(db, years, genders, order='alpha', start=None, finish=None):
         if db: # Output the names by Year / Gender in alphabetical order
-            for year in db.keys():
+            for year in years:
                     print(f'\nYear: {year}')
-                    for gender in db[year]:
+                    for gender in genders:
                         print(f'\n\tGender: {gender}')
-                        for name in sorted(db[year][gender], key=str.lower)[:count]: # only displaying the first 10
-                            print(f'\t\t{name}: {db[year][gender][name]}')
+                        if order == 'alpha':
+                            for name in sorted(db[year][gender], key=str.lower)[start:finish]:
+                                yield name,db[year][gender][name]
+                        if order == 'rank':
+                            for name in list(db[year][gender])[start:finish]:
+                                yield name,db[year][gender][name]
+                            # print(f'\t\t{name}: {db[year][gender][name]}')
 
 
 def name_trend(name,gender,db):
@@ -47,8 +52,39 @@ def name_trend(name,gender,db):
 
 
 def main():
-    global names
-    names = { # before writing any other code, a data structure was decided
+    names = {}
+
+    print('Baby Name Popularity Parser')
+    args = sys.argv[1:]
+    
+    if not args: # No arguments returns a list of files available for parsing then exits
+        print(f'Current working directory is: {os.getcwd()}')
+        print(f'Specify one or more of the following files:')
+        [print(name) for name in what_files()]
+        print('Or "--all" to recurse the data/ directory')
+        exit()
+    
+    if args[0] == '--all': # "--all" walks the /data directory and returns all files
+        print("You want the whole enchalada")
+        files = os.listdir(path='data/')
+        args = [] # need it clean for the new list of files
+        for item in files:
+            args.append('data/' + item)
+        
+    for filename in args: # can pass more than one filename
+        year_add = baby_names_parser(filename)
+        names.update(year_add)
+    # print(names)
+
+    for name, rank in output_names(names, years=names.keys(), genders=["Female","Male"], order= 'rank', start=None, finish=5):
+        print(f'\t\t\t{name}: {rank}')
+
+    name_trend("Noah","Male",names)
+    
+if __name__ == '__main__':
+    main()
+
+    # names = { # before writing any other code, a data structure was decided
     # '2004':{
     #     'boy':{
     #         "Alex": 4,
@@ -77,48 +113,4 @@ def main():
     #         "Sarah": 5,
     #         "Katie": 4}
     #     }
-    }
-
-    print('Baby Name Popularity Parser')
-    args = sys.argv[1:]
-    
-    if not args: # No arguments returns a list of files available for parsing then exits
-        print(f'Current working directory is: {os.getcwd()}')
-        print(f'Specify one or more of the following files:')
-        [print(name) for name in what_files()]
-        print('Or "--all" to recurse the data/ directory')
-        exit()
-    
-    if args[0] == '--all': # "--all" walks the /data directory and returns all files
-        print("You want the whole enchalada")
-        files = os.listdir(path='data/')
-        args = [] # need it clean for the new list of files
-        for item in files:
-            args.append('data/' + item)
-        
-    for filename in args: # can pass more than one filename
-        year_add = baby_names_parser(filename)
-        names.update(year_add)
-    # print(names)
-
-    output_names(names,count=50)
-
-    # if names: # Output the names by Year / Gender in alphabetical order
-    #     for year in names.keys():
-    #         print(f'\nYear: {year}')
-    #         for gender in names[year]:
-    #             print(f'\n\tGender: {gender}')
-    #             for name in sorted(names[year][gender], key=str.lower)[:50]: # only displaying the first 10
-    #                 print(f'\t\t{name}: {names[year][gender][name]}')
-
-    name_trend("Noah","Male",names)
-    
-    # print('\n\nNoah-') #check the popularity of a specific name over time
-    # for year in names.keys():
-    #     try:
-    #         print(f'Year: {year} Rank: {names[year]["Male"]["Noah"]}')
-    #     except:
-    #         print("Name not found")
-
-if __name__ == '__main__':
-    main()
+    #}

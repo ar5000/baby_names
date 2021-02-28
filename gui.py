@@ -3,7 +3,7 @@ from tkinter import ttk
 from tkinter import scrolledtext, Menu
 
 
-from baby_names import baby_names_parser
+import baby_names
 
 # ----------------------------
 # GUI Setup
@@ -53,8 +53,8 @@ choose_file_label.grid(column=2, row= 0)
 # file_chosen_cb = ttk.Combobox(main_cont, width = 15, textvariable=file_s)
 
 file_chosen = tk. StringVar()
-file_chosen_cb = ttk.Combobox(main_cont, width=15, textvariable = file_chosen, state='readonly')
-file_chosen_cb['values'] = ('baby1990.html','baby1991.html')
+file_chosen_cb = ttk.Combobox(main_cont, width=20, textvariable = file_chosen, state='readonly')
+file_chosen_cb['values'] = (baby_names.what_files())
 file_chosen_cb.grid(column= 0, row = 3)
 file_chosen_cb.current(1)
 
@@ -83,7 +83,7 @@ asc_radio.grid(column=1, row=5)
 scrollable_text = scrolledtext.ScrolledText(main_cont, width=40, height=3, wrap=tk.WORD)
 scrollable_text.grid(column=0, columnspan=3, row=6)
 
-scrollable_text.insert(tk.INSERT, "hiiiiiiiiiiii\n\n\n\niiiiiiiiii!!!!", )
+scrollable_text.insert(tk.INSERT, file_chosen_cb.current(1), )
 scrollable_text.configure(state="disabled")
 
 btn_frame = ttk.LabelFrame(main_cont, text="This is a label")

@@ -1,7 +1,7 @@
 import re, sys, os
 
-def what_files():
-    file_names = [f'data/{name}' for name in os.listdir(path='data/')]
+def what_files(dir):
+    file_names = [f'{dir}/{name}' for name in os.listdir(path=f'{dir}/')]
     return file_names
 
 
@@ -62,13 +62,13 @@ def main():
     if not args: # No arguments returns a list of files available for parsing then exits
         print(f'Current working directory is: {os.getcwd()}')
         print(f'Specify one or more of the following files:')
-        [print(name) for name in what_files()]
+        [print(name) for name in what_files("data")]
         print('Or "--all" to recurse the data/ directory')
         exit()
     
     if args[0] == '--all': # "--all" walks the /data directory and returns all files
         print("You want the whole enchalada")
-        files = os.listdir(path='data/')
+        files = os.listdir(path='data')
         args = [] # need it clean for the new list of files
         for item in files:
             args.append('data/' + item)

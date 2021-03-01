@@ -24,17 +24,17 @@ def file_chooser():
     scrollable_text = scrolledtext.ScrolledText(file_parser_frame_right, width=40, height=45)
     scrollable_text.grid(column=7, columnspan=5, row=0, sticky=E)
 
-    scrollable_text.insert(INSERT, [f'Name: {name[0]} \t Rank: {name[1]}\n' for name in baby_names.output_names(names, order='rank')])
+    scrollable_text.insert(INSERT, "".join([f'Name: {name[0]} \t Rank: {name[1]}\n' for name in baby_names.output_names(names, order='rank')]))
     scrollable_text.configure(state="disabled")
     populate_year_checks()
     
-def update_text(year_choice, order_selection, gender_selection):
+def update_text(year_choice, order_selection, gender_selection, start_selection, stop_selection):
     global scrollable_text
     scrollable_text = scrolledtext.ScrolledText(file_parser_frame_right, width=40, height=45)
     scrollable_text.grid(column=7, columnspan=5, row=0, sticky=E)
 
-    scrollable_text.insert(INSERT, [f'Name: {name[0]} \t Rank: {name[1]}\n' for name in baby_names.output_names(names, years=year_choice, order=order_selection, gender=gender_selection)])
-    scrollable_text.configure(state="disabled")
+    scrollable_text.insert(INSERT, [f'Name: {name[0]} \t Rank: {name[1]}\n' for name in baby_names.output_names(names, years=year_choice, order=order_selection, gender=gender_selection, start=start_selection, stop=stop_selection)])
+    scrollable_text.configure(state="disabled") 
 
 
 def populate_year_checks():

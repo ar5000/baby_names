@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "args": ["--all"],
+            // "args": ["--all"],
             // "args": ["data/baby1990.html"],
             "console": "integratedTerminal"
             "justMyCode": false

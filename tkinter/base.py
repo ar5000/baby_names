@@ -1,15 +1,14 @@
 from tkinter import *
-from types import LambdaType
 from PIL import ImageTk, Image
-from tkinter import messagebox
+
 
 def open():
-
+    global my_img
     top = Toplevel()
-    # lbl = Label(top, text='Hello World').pack()
-    my_img = ImageTk.PhotoImage(Image.open("tkinter/images/cave.jpg"))
-    
-
+    top.title("My second window")
+    my_img = ImageTk.PhotoImage(Image.open("tkinter/images/cave.jpg"))   
+    my_label = Label(top, image=my_img).pack()
+    btn2 = Button(top, text='Close Window', command=top.destroy).pack()
 
 def main():
 
@@ -17,7 +16,8 @@ def main():
     root.title('Learn to Code at w_coding')
     root.iconbitmap('tkinter/images/baby.ico')
 
-    my_label = Label(top, image=my_img).pack()
+    btn = Button(root, text="Open Second Window", command=open).pack()
+
 
 
 

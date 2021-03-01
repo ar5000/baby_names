@@ -13,8 +13,6 @@ window = tk.Tk()
 window.title('Baby Names')
 window.resizable(True,True)
 
-
-
 # ------------------------------
 # Callbacks
 # ----------------------------
@@ -52,7 +50,7 @@ choose_file_label = ttk.Label(main_cont, text="Choose a file to extract baby dat
 choose_file_label.grid(column=2, row= 0)
 # file_chosen_cb = ttk.Combobox(main_cont, width = 15, textvariable=file_s)
 
-file_chosen = tk. StringVar()
+file_chosen = tk.StringVar()
 file_chosen_cb = ttk.Combobox(main_cont, width=20, textvariable = file_chosen, state='readonly')
 file_chosen_cb['values'] = (baby_names.what_files())
 file_chosen_cb.grid(column= 0, row = 3)
